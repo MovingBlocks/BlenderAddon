@@ -4,7 +4,7 @@ These are a collection of blender addons and utilites that focus on building ass
 
 ## block_exporter_import
 
-Allows the export and import of Terasology shape file
+Allows the export and import of Terasology shape files.
 
 examples can be found under ```examples/shapes/```
 
