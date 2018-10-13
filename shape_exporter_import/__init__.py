@@ -14,7 +14,7 @@
 # limitations under the License.
 
 bl_info = {
-    "name": "Terasology Block Shape Export",
+    "name": "Terasology Block Shape Importer-Export",
     "description": "Exporter for producing Terasology Block Shape files (in JSON format)",
     "author": "Immortius",
     "version": (1, 3),
