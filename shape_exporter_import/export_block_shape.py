@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import bpy
 from bpy.props import BoolProperty, StringProperty
 import bpy_extras.io_utils
@@ -19,6 +18,7 @@ import json
 import datetime
 from mathutils import Vector
 from . import constants
+from . import json_no_indent
 
 class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
     bl_idname = "export_scene.shape"
@@ -55,7 +55,7 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
 
         temp_verts = []
         for v in mesh.vertices:
-            result['vertices'].append([-v.co[0], v.co[2], v.co[1]])
+            result['vertices'].append(json_no_indent.NoIndent([-v.co[0], v.co[2], v.co[1]]))
             result['normals'].append(None)
             result['texcoords'].append(None)
 
@@ -70,9 +70,9 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
                     normal = tuple(vert.normal)
                 uvtemp = mesh.tessface_uv_textures.active.data[i].uv[j]
                 uvs = uvtemp[0], 1.0 - uvtemp[1]
-                result['normals'][index] = [-normal[0], normal[2], normal[1]]
-                result['texcoords'][index] = uvs
-            result['faces'].append([f for f in face.vertices])
+                result['normals'][index] = json_no_indent.NoIndent([-normal[0], normal[2], normal[1]])
+                result['texcoords'][index] = json_no_indent.NoIndent(uvs)
+            result['faces'].append(json_no_indent.NoIndent([f for f in face.vertices]))
 
         if apply_modifiers:
             bpy.data.meshes.remove(mesh)
@@ -88,14 +88,12 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
             if not obj:
                 return
             mesh = obj.data
-            for face in mesh.faces:
-                for index in enumerate(face.vertices):
-                    vert = mesh.vertices[index].co
-                    for i in range(3):
-                        if vert[i] > max[i]:
-                            max[i] = vert[i]
-                        elif vert[i] < min[i]:
-                            min[i] = vert[i]
+            for v in mesh.vertices:
+                for i in range(3):
+                    if v.co[i] > max[i]:
+                        max[i] = v.co[i]
+                    elif v.co[i] < min[i]:
+                        min[i] = v.co[i]
 
         pos = [0.0, 0.0, 0.0]
         dim = [0.0, 0.0, 0.0]
@@ -106,8 +104,8 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
 
         return {
             'type': 'AABB',
-            'position': [-pos[0], pos[2], pos[1]],
-            'extents': [-dim[0], dim[2], dim[1]]
+            'position': json_no_indent.NoIndent([-pos[0], pos[2], pos[1]]),
+            'extents': json_no_indent.NoIndent([-dim[0], dim[2], dim[1]])
         }
 
     def sphereCollider(self, objs):
@@ -126,7 +124,7 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
                 radius = max(dist, radius)
         return {
             'type': 'Sphere',
-            'position': [-center[0], center[2], center[1]],
+            'position': json_no_indent.NoIndent([-center[0], center[2], center[1]]),
             'radius': radius
         }
 
@@ -175,7 +173,7 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
 
         file = open(path, "w", encoding="utf8")
         print("saving complete: %r " % path)
-        file.write(json.dumps(result,  indent=4, separators=(',', ': ')))
+        file.write(json.dumps(result,indent=2, separators=(',', ': '),cls=json_no_indent.Encoder))
         file.close()
         # filepath = self.filepath
 
