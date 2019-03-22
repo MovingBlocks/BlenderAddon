@@ -18,6 +18,7 @@ import json
 from . import constants
 import bmesh
 
+
 class ImportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
     bl_idname = "import_scene.shape"
     bl_label = "Import Terasology Block Shape"
@@ -41,7 +42,6 @@ class ImportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
         if 'author' in payload:
             context.scene.teraAuthor = payload['author']
 
-
         for part in constants.PARTS:
             if(part.lower() in payload):
                 sub_payload = payload[part.lower()]
@@ -49,7 +49,7 @@ class ImportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                 bm = bmesh.new()
                 verticies = []
                 for v in sub_payload['vertices']:
-                    verticies.append(bm.verts.new((-v[0],v[1],v[2])))
+                    verticies.append(bm.verts.new((-v[0], v[1], v[2])))
 
                 bm.verts.ensure_lookup_table()
                 bm.verts.index_update()
@@ -61,24 +61,24 @@ class ImportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                 for face in bm.faces:
                     for loop in face.loops:
                         uv = sub_payload['texcoords'][loop.vert.index]
-                        loop[uv_layer].uv = (uv[0],1.0 - uv[1])
+                        loop[uv_layer].uv = (uv[0], 1.0 - uv[1])
 
                 mesh = bpy.data.meshes.new("mesh")
                 bm.to_mesh(mesh)
-                object = bpy.data.objects.new(part.capitalize(),mesh)
+                object = bpy.data.objects.new(part.capitalize(), mesh)
                 bpy.context.scene.objects.link(object)
                 bm.free()
 
-                if 'fullSide' in  sub_payload:
-                    bpy.data.objects[part.capitalize()].teraFullSide = sub_payload['fullSide']
+                if 'fullSide' in sub_payload:
+                    bpy.data.objects[part.capitalize(
+                    )].teraFullSide = sub_payload['fullSide']
                 else:
                     bpy.data.objects[part.capitalize()].teraFullSide = False
-
 
         payload_collision = None
         if 'collision' in payload:
             payload_collision = payload['collision']
-        if(payload_collision != None):
+        if(payload_collision is not None):
             if 'symmetric' in payload_collision:
                 context.scene.teraCollisionSymmetric = payload_collision['symmetric']
             if 'yawSymmetric' in payload_collision:
@@ -96,16 +96,20 @@ class ImportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                         if(collider['type'] == 'AABB'):
                             p = collider['position']
                             e = collider['extents']
-                            bpy.ops.mesh.primitive_cube_add(location=(-p[0], p[1], p[2]))
+                            bpy.ops.mesh.primitive_cube_add(
+                                location=(-p[0], p[1], p[2]))
                             bpy.ops.transform.resize(value=(-e[0], e[1], e[2]))
-                            bpy.ops.object.transform_apply(location=True, scale=True, rotation=True)
+                            bpy.ops.object.transform_apply(
+                                location=True, scale=True, rotation=True)
                             obj = bpy.context.object
                             obj['teraColliderType'] = collider['type']
                         elif collider['type'] == 'Sphere':
                             p = collider['position']
                             r = collider['radius']
-                            bpy.ops.mesh.primitive_uv_sphere_add(segments=16,location = (-p[0], p[1], p[2]),size = r)
-                            bpy.ops.object.transform_apply(location=True, scale=True, rotation=True)
+                            bpy.ops.mesh.primitive_uv_sphere_add(
+                                segments=16, location=(-p[0], p[1], p[2]), size=r)
+                            bpy.ops.object.transform_apply(
+                                location=True, scale=True, rotation=True)
                             obj = bpy.context.object
                             obj['teraColliderType'] = collider['type']
 

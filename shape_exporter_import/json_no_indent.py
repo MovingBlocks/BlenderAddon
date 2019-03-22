@@ -2,6 +2,7 @@ import json
 import re
 from _ctypes import PyObj_FromPtr
 
+
 class NoIndent(object):
     """ Value wrapper. """
 
@@ -33,7 +34,8 @@ class Encoder(json.JSONEncoder):
             # see https://stackoverflow.com/a/15012814/355230
             id = int(match.group(1))
             no_indent = PyObj_FromPtr(id)
-            json_obj_repr = json.dumps(no_indent.value, sort_keys=self.__sort_keys)
+            json_obj_repr = json.dumps(
+                no_indent.value, sort_keys=self.__sort_keys)
 
             # Replace the matched id string with json formatted representation
             # of the corresponding Python object.
