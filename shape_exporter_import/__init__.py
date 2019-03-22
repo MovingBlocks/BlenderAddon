@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from . import import_block_shape
+from . import export_block_shape
+from bpy.props import StringProperty, BoolProperty
+import bpy
 bl_info = {
     "name": "Terasology Block Shape Import-Export",
     "description": "Exporter for producing Terasology Block Shape files (in JSON format)",
@@ -22,10 +26,6 @@ bl_info = {
     "location": "File > Import-Export",
     "category": "Import-Export"}
 
-import bpy
-from bpy.props import StringProperty, BoolProperty
-from . import export_block_shape
-from . import import_block_shape
 
 # UI Panel
 
@@ -42,10 +42,19 @@ bpy.types.Scene.teraDisplayName = StringProperty(
 bpy.types.Scene.teraCollisionType = bpy.props.EnumProperty(
     name="Collision Type",
     description="Type of collision to use for this block",
-    items=[("FullCube", "Full Cube", "The entire block is solid"),
-           ("AutoAABB", "Auto AABB", "An AABB is calculated that encompasses the block mesh"),
-           ("ConvexHull", "Auto Convex Hull", "A convex hull is calculated that encompasses the block mesh"),
-           ("Manual", "Manual", "One or more colliders are specified to describe the collision")])
+    items=[
+        ("FullCube",
+         "Full Cube",
+         "The entire block is solid"),
+        ("AutoAABB",
+         "Auto AABB",
+         "An AABB is calculated that encompasses the block mesh"),
+        ("ConvexHull",
+         "Auto Convex Hull",
+         "A convex hull is calculated that encompasses the block mesh"),
+        ("Manual",
+         "Manual",
+         "One or more colliders are specified to describe the collision")])
 
 bpy.types.Scene.teraCollisionSymmetric = BoolProperty(
     name="Is Collision Symmetric",
@@ -124,10 +133,16 @@ class TeraObjectPropUIPanel(bpy.types.Panel):
 
 
 def menu_export(self, context):
-    self.layout.operator(export_block_shape.ExportToBlockShape.bl_idname, text="Terasology Block Shape (.shape)")
+    self.layout.operator(
+        export_block_shape.ExportToBlockShape.bl_idname,
+        text="Terasology Block Shape (.shape)")
+
 
 def menu_import(self, context):
-    self.layout.operator(import_block_shape.ImportToBlockShape.bl_idname, text="Terasology Block Shape (.shape)")
+    self.layout.operator(
+        import_block_shape.ImportToBlockShape.bl_idname,
+        text="Terasology Block Shape (.shape)")
+
 
 def register():
     bpy.utils.register_module(__name__)
@@ -139,4 +154,3 @@ def unregister():
     bpy.utils.unregister_module(__name__)
     bpy.types.INFO_MT_file_export.remove(menu_export)
     bpy.types.INFO_MT_file_import.remove(menu_import)
-

@@ -20,6 +20,7 @@ from mathutils import Vector
 from . import constants
 from . import json_no_indent
 
+
 class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
     bl_idname = "export_scene.shape"
     bl_label = "Export Terasology Block Shape"
@@ -34,7 +35,7 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
 
     @classmethod
     def poll(cls, context):
-        return context.active_object != None
+        return context.active_object is not None
 
     def meshify(self, obj, scene, apply_modifiers):
         if not obj:
@@ -55,7 +56,8 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
 
         temp_verts = []
         for v in mesh.vertices:
-            result['vertices'].append(json_no_indent.NoIndent([-v.co[0], v.co[2], v.co[1]]))
+            result['vertices'].append(
+                json_no_indent.NoIndent([-v.co[0], v.co[2], v.co[1]]))
             result['normals'].append(None)
             result['texcoords'].append(None)
 
@@ -70,9 +72,11 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
                     normal = tuple(vert.normal)
                 uvtemp = mesh.tessface_uv_textures.active.data[i].uv[j]
                 uvs = uvtemp[0], 1.0 - uvtemp[1]
-                result['normals'][index] = json_no_indent.NoIndent([-normal[0], normal[2], normal[1]])
+                result['normals'][index] = json_no_indent.NoIndent(
+                    [-normal[0], normal[2], normal[1]])
                 result['texcoords'][index] = json_no_indent.NoIndent(uvs)
-            result['faces'].append(json_no_indent.NoIndent([f for f in face.vertices]))
+            result['faces'].append(
+                json_no_indent.NoIndent([f for f in face.vertices]))
 
         if apply_modifiers:
             bpy.data.meshes.remove(mesh)
@@ -122,11 +126,8 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
             for v in mesh.vertices:
                 dist = (center - v.co).length
                 radius = max(dist, radius)
-        return {
-            'type': 'Sphere',
-            'position': json_no_indent.NoIndent([-center[0], center[2], center[1]]),
-            'radius': radius
-        }
+        return {'type': 'Sphere', 'position': json_no_indent.NoIndent(
+            [-center[0], center[2], center[1]]), 'radius': radius}
 
     def execute(self, context):
         path = bpy.path.ensure_ext(self.filepath, self.filename_ext)
@@ -141,9 +142,11 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
         bpy.ops.object.mode_set(mode='OBJECT')
         for part in constants.PARTS:
             if part in bpy.data.objects:
-                result[part.lower()] = self.meshify(bpy.data.objects[part], context.scene, self.apply_modifiers)
+                result[part.lower()] = self.meshify(
+                    bpy.data.objects[part], context.scene, self.apply_modifiers)
                 if ("teraFullSide" in bpy.data.objects[part]):
-                    result[part.lower()]['fullSide'] = bpy.data.objects[part].teraFullSide
+                    result[part.lower()
+                           ]['fullSide'] = bpy.data.objects[part].teraFullSide
                 else:
                     result[part.lower()]['fullSide'] = False
 
@@ -151,7 +154,8 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
         result['collision'] = {}
         if context.scene.teraCollisionType == "AutoAABB":
             hasColliders = True
-            result['collision']['colliders'] = [self.AABBCollider([o for o in bpy.data.objects if o.name in constants.PARTS])]
+            result['collision']['colliders'] = [self.AABBCollider(
+                [o for o in bpy.data.objects if o.name in constants.PARTS])]
         elif context.scene.teraCollisionType == "ConvexHull":
             result['collision']['convexHull'] = True
             hasColliders = True
@@ -161,11 +165,13 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
             for object in bpy.data.objects:
                 if object.teraColliderType != '' and object.teraColliderType == 'None':
                     if object.teraColliderType == 'AABB':
-                        result['collision']['colliders'].append(self.AABBCollider([object]))
+                        result['collision']['colliders'].append(
+                            self.AABBCollider([object]))
                     elif object.teraColliderType == 'Sphere':
-                        result['collision']['colliders'].append(self.sphereCollider([object]))
+                        result['collision']['colliders'].append(
+                            self.sphereCollider([object]))
 
-        if (hasColliders == True):
+        if (hasColliders):
             result['collision']["symmetric"] = context.scene.teraCollisionSymmetric
             result['collision']['yawSymmetric'] = context.scene.teraCollisionSymmetricZ
             result['collision']['pitchSymmetric'] = context.scene.teraCollisionSymmetricX
@@ -173,7 +179,14 @@ class ExportToBlockShape(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
 
         file = open(path, "w", encoding="utf8")
         print("saving complete: %r " % path)
-        file.write(json.dumps(result,indent=2, separators=(',', ': '),cls=json_no_indent.Encoder))
+        file.write(
+            json.dumps(
+                result,
+                indent=2,
+                separators=(
+                    ',',
+                    ': '),
+                cls=json_no_indent.Encoder))
         file.close()
         # filepath = self.filepath
 
