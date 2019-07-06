@@ -11,14 +11,19 @@ bl_info = {
 
 import os
 
+
 if "bpy" in locals():
     import importlib
     importlib.reload(ui)
     importlib.reload(operator)
+    importlib.reload(properties)
+    importlib.reload(vieport)
 else:
     import bpy
     from . import ui
     from . import operator
+    from . import properties
+    from . import vieport
 import bpy
 
 from bpy.utils import previews
@@ -105,12 +110,20 @@ class Terasology_Block_Pref(AddonPreferences):
 
 
 def register():
-    bpy.utils.register_class(Terasology_Block_Pref)
-    TOOLS_PT_panel.register()
+    ui.register()
+    operator.register()
+    properties.register()
+    vieport.register()
+    # bpy.utils.register_class(Terasology_Block_Pref)
+    # TOOLS_PT_panel.register()
 
 def unregister():
-    bpy.utils.unregister_class(Terasology_Block_Pref)
-    TOOLS_PT_panel.unregister()
+    ui.unregister()
+    operator.unregister()
+    properties.unregister()
+    vieport.unregister()
+    # bpy.utils.unregister_class(Terasology_Block_Pref)
+    # TOOLS_PT_panel.unregister()
 
 if __name__ == '__main__':
     register()
