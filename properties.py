@@ -12,7 +12,6 @@ from bpy.props import (
         )
 
 class TeraBlockProperty(PropertyGroup):
-    name = StringProperty(default="")
     author = StringProperty(default="")
 
 # class TeraBlockCollectionProperty(PropertyGroup):
@@ -23,10 +22,8 @@ class TeraBlockProperty(PropertyGroup):
 def register():
     bpy.utils.register_class(TeraBlockProperty)
 
-    # bpy.types.empty
-    # bpy.utils.register_class(TeraBlockCollectionProperty)
     bpy.types.Object.tera_block = PointerProperty(type=TeraBlockProperty)
-    # bpy.types.Collection.tera_group = bpy.props.PointerProperty(type=TeraBlockCollectionProperty)
+
     bpy.types.Scene.tera_selected_group =  PointerProperty(type=Collection)
     bpy.types.Collection.tera_block_index = IntProperty()
 

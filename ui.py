@@ -56,8 +56,6 @@ class Window_PT_Blocks(Panel):
             r3.label(text=collection.name)
             self.draw_collection(context,r2.column(),collection)
 
-
-
     def draw(self, context):
         # self.layout.label(text="Block Groups")
         selected_group_collection = context.scene.tera_selected_group
@@ -87,14 +85,25 @@ class Window_PT_Blocks(Panel):
         length = len(selected_group_collection.objects)
         if(length > 0 and selected_group_collection.tera_block_index < length):
             selected_object = selected_group_collection.objects[selected_group_collection.tera_block_index]
-            self.layout.row().label(text=selected_object.name)
+            # self.layout.row().label(text=selected_object.name)
+            self.layout.row().prop(selected_object.tera_block,"author")
 
+
+class Window_PT_BlockUtilities(Panel):
+    bl_label = "Terasology Block Properties"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+
+    def draw(self, context):
+        pass
 
 def register():
     bpy.utils.register_class(Block_UL_list)
     bpy.utils.register_class(Window_PT_Blocks)
+    bpy.utils.register_class(Window_PT_BlockUtilities)
 
 
 def unregister():
     bpy.utils.unregister_class(Block_UL_list)
     bpy.utils.unregister_class(Window_PT_Blocks)
+    bpy.utils.unregister_class(Window_PT_BlockUtilities)
