@@ -9,8 +9,8 @@ from bpy.props import (
         )
 import bpy
 
-class SelectedBlockGroup(Operator):
-    bl_idname = "tera.select_block_group"
+class SelectGroup(Operator):
+    bl_idname = "tera.select_group"
     bl_label = "Select Group"
     bl_description = "Select a Group"
 

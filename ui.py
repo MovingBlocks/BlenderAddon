@@ -1,3 +1,9 @@
+if "bpy" in locals():
+    import importlib
+    importlib.reload(util)
+else:
+    from . import util
+
 from bpy.types import (Panel,UIList,BlendDataCollections)
 from bpy.props import (
         BoolProperty,
@@ -12,9 +18,7 @@ import bpy
 import logging
 
 class Block_UL_list(UIList):
-
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname,index, flt_flag):
-        ob = data
         layout.prop(item, "name", text="", emboss=False, icon_value=icon)
 
     def filter_items(self, context, data, propname):
@@ -34,8 +38,6 @@ class Block_UL_list(UIList):
 
         return (flt_flags, flt_neworder)
 
-
-
 class Window_PT_Blocks(Panel):
     bl_idname = "Window_PT_Blocks"
     bl_label = "Terasology Blocks"
@@ -52,14 +54,13 @@ class Window_PT_Blocks(Panel):
             r2 = row.column()
             r3 = r2.row()
 
-            r3.operator("tera.select_block_group",emboss=False, icon='DECORATE_KEYFRAME' if selected_group == collection else 'DECORATE_ANIMATE',text="").target = collection.name
+            r3.operator("tera.select_group",emboss=False, icon='DECORATE_KEYFRAME' if selected_group == collection else 'DECORATE_ANIMATE',text="").target = collection.name
             r3.label(text=collection.name)
             self.draw_collection(context,r2.column(),collection)
 
-    def draw(self, context):
-        # self.layout.label(text="Block Groups")
-        selected_group_collection = context.scene.tera_selected_group
 
+    def draw(self, context):
+        selected_group_collection = context.scene.tera_selected_group
         row = self.layout.row()
         row1 = row.box()
         col = row1.column()
@@ -68,25 +69,49 @@ class Window_PT_Blocks(Panel):
         self.draw_collection(context,col,scn.collection)
 
         col = row.column()
-        col.operator("tera.add_block_group", icon='ADD', text="")
-        col.operator("tera.remove_block_group", icon='REMOVE', text="")
+        col.operator("tera.add_group", icon='ADD', text="")
+        col.operator("tera.remove_group", icon='REMOVE', text="")
 
 
         row = self.layout.row()
         if(selected_group_collection):
             row.template_list("Block_UL_list","",selected_group_collection,"objects",selected_group_collection,"tera_block_index")
+            col = row.column()
+            selected_object = util.getSelectedObjectShape()
+
+            # right and and remove
+            op = col.operator("tera.add_shape_to_group", icon='ADD', text="")
+            op.collection = selected_group_collection.name
+            op = col.operator("tera.remove_shape_to_group", icon='REMOVE', text="")
+            op.collection = selected_group_collection.name
+            op.shape = selected_object.name
+
+
+            if(selected_object):
+                self.layout.row().prop(selected_object.tera_block,"author")
+
+class Block_UL_AABB_list(UIList):
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index, flt_flag):
+        layout.prop(item, "label", text="", emboss=False, icon_value=icon)
+
+class Window_PT_AABBBoxCollider(Panel):
+    bl_label = "Terasology AABB Colliders"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+
+    @classmethod
+    def poll(cls, context):
+        selected_object = util.getSelectedObjectShape()
+        return (selected_object is not None)
+
+    def draw(self, context):
+        selected_object = util.getSelectedObjectShape()
+        row = self.layout.row()
+        row.template_list("Block_UL_AABB_list", "", selected_object, "aabb", selected_object,"aabb_index")
 
         col = row.column()
-        op = col.operator("tera.add_block_to_group", icon='ADD', text="")
-        if(selected_group_collection):
-            op.collection = selected_group_collection.name
-
-        col.operator("tera.add_block_group", icon='REMOVE', text="")
-        length = len(selected_group_collection.objects)
-        if(length > 0 and selected_group_collection.tera_block_index < length):
-            selected_object = selected_group_collection.objects[selected_group_collection.tera_block_index]
-            # self.layout.row().label(text=selected_object.name)
-            self.layout.row().prop(selected_object.tera_block,"author")
+        col.operator("tera.add_aabb_shape_collider", icon='ADD', text="")
+        col.operator("tera.remove_block_group", icon='REMOVE', text="")
 
 
 class Window_PT_BlockUtilities(Panel):
@@ -94,16 +119,26 @@ class Window_PT_BlockUtilities(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
 
+    @classmethod
+    def poll(cls, context):
+        return (util.getSelectedObjectShape() is not None)
+
     def draw(self, context):
-        pass
+        selected_object = util.getSelectedObjectShape()
+
+
 
 def register():
+    bpy.utils.register_class(Block_UL_AABB_list)
     bpy.utils.register_class(Block_UL_list)
     bpy.utils.register_class(Window_PT_Blocks)
     bpy.utils.register_class(Window_PT_BlockUtilities)
+    bpy.utils.register_class(Window_PT_AABBBoxCollider)
 
 
 def unregister():
+    bpy.utils.unregister_class(Block_UL_AABB_list)
     bpy.utils.unregister_class(Block_UL_list)
     bpy.utils.unregister_class(Window_PT_Blocks)
     bpy.utils.unregister_class(Window_PT_BlockUtilities)
+    bpy.utils.unregister_class(Window_PT_AABBBoxCollider)

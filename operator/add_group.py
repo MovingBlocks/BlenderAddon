@@ -8,7 +8,7 @@ from bpy.props import (
         )
 import bpy
 
-def get_block_groups(self, context):
+def get_groups(self, context):
     result = {(c.name,c.name,'') for c in bpy.data.collections}
     result.add(('none', 'none', 'no parents'))
     return result
@@ -17,21 +17,23 @@ def collection_update_prop(self, context):
     pass
 
 
-class AddBlockGroup(Operator):
-    bl_idname = "tera.add_block_group"
+class AddGroup(Operator):
+    bl_idname = "tera.add_group"
     bl_label = "Add Group"
-    bl_description = "Adds a new Block Group"
+    bl_description = "Adds a new shape to group"
 
     parent: EnumProperty(
         name='block group',
         description='The collection to parent group to.',
-        items=get_block_groups,
+        items=get_groups,
         update=collection_update_prop)
 
     name: StringProperty(
             name="name",
             default=""
             )
+
+
     def draw(self,context):
         layout = self.layout
         col = layout.column(align=True)

@@ -8,8 +8,8 @@ from bpy.props import (
         )
 import bpy
 
-class RemoveBlockGroup(Operator):
-    bl_idname = "tera.remove_block_group"
+class RemoveGroup(Operator):
+    bl_idname = "tera.remove_group"
     bl_label = "Remove Group"
     bl_description = "Remove Group"
 

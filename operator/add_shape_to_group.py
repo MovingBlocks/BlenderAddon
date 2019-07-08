@@ -8,22 +8,22 @@ from bpy.props import (
         )
 import bpy
 
-def get_block_groups(self, context):
+def get_groups(self, context):
     return {(c.name,c.name,'') for c in bpy.data.collections}
 
-def collection_update_prop(self, context):
+def on_update_groups(self, context):
     pass
 
-class AddBlockToGroup(Operator):
-    bl_idname = "tera.add_block_to_group"
-    bl_label = "Add Block"
-    bl_description = "Adds a new Block to Group"
+class AddShapeToGroup(Operator):
+    bl_idname = "tera.add_shape_to_group"
+    bl_label = "Add Shape"
+    bl_description = "Adds a new Shape to Group"
 
     collection: EnumProperty(
-        name='block group',
-        description='The collection to reference.',
-        items=get_block_groups,
-        update=collection_update_prop)
+        name='Shape Group',
+        description='Add shape to group.',
+        items=get_groups,
+        update=on_update_groups)
 
     name:  StringProperty(
         name="name",
@@ -36,7 +36,8 @@ class AddBlockToGroup(Operator):
         layout = self.layout
         col = layout.column(align=True)
         col.row().prop(self, "name")
-        col.row().prop(self,"collection")
+        if(bpy.context.area.type != 'PROPERTIES'):
+            col.row().prop(self,"collection")
 
     def execute(self,context):
         if not self.name:

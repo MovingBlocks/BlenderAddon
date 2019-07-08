@@ -8,18 +8,30 @@ from bpy.props import (
         IntProperty,
         StringProperty,
         CollectionProperty,
-        PointerProperty
+        PointerProperty,
+        FloatVectorProperty
         )
 
+
+class TeraBlockAABB(PropertyGroup):
+    label = StringProperty(name="label",
+                           description="label that describes aabb collider")
+    origin = FloatVectorProperty(name="origin",
+                                 description="origin of the collider shape",
+                                 size=3)
+    extent = FloatVectorProperty(name="extent",
+                                 description="extent of the collider shape",
+                                 size=3)
+
+
 class TeraBlockProperty(PropertyGroup):
+
     author = StringProperty(default="")
-
-# class TeraBlockCollectionProperty(PropertyGroup):
-#     name = StringProperty(default="")
-#     expanded = BoolProperty(default=True)
-
+    aabb = CollectionProperty(type=TeraBlockAABB)
+    aabb_index = IntProperty()
 
 def register():
+    bpy.utils.register_class(TeraBlockAABB)
     bpy.utils.register_class(TeraBlockProperty)
 
     bpy.types.Object.tera_block = PointerProperty(type=TeraBlockProperty)
@@ -29,5 +41,5 @@ def register():
 
 
 def unregister():
+    bpy.utils.unregister_class(TeraBlockAABB)
     bpy.utils.unregister_class(TeraBlockProperty)
-    # bpy.utils.unregister_class(TeraBlockCollectionProperty)
