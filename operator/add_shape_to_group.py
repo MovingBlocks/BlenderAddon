@@ -1,12 +1,13 @@
-from bpy.types import Operator
-from bpy.props import (
-        BoolProperty,
-        EnumProperty,
-        FloatProperty,
-        IntProperty,
-        StringProperty,
-        )
 import bpy
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+    StringProperty,
+)
+from bpy.types import Operator
+
 
 def get_groups(self, context):
     return {(c.name,c.name,'') for c in bpy.data.collections}

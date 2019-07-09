@@ -1,4 +1,5 @@
 import bpy
+
 def getSelectedObjectShape():
     selected_group_collection = bpy.context.scene.tera_selected_group
     length = len(selected_group_collection.objects)
