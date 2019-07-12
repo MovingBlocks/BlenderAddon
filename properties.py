@@ -24,6 +24,7 @@ class TeraColliderAABB(PropertyGroup):
                                  size=3)
 
 
+
 class TeraMeshShape(PropertyGroup):
     part = EnumProperty(
         name='shape side',
@@ -44,15 +45,15 @@ def on_mesh_change_index(self, context):
     bpy.context.view_layer.objects.active = bpy.data.objects[self.mesh_index]
 
 
-class TeraBlockProperty(PropertyGroup):
+class TeraShapeProperty(PropertyGroup):
 
     author = StringProperty(default="")
     symmetric = BoolProperty(name="symmetric")
     yawSymmetric = BoolProperty(name="yawSymmetric")
     pitchSymmetric = BoolProperty(name="pitchSymmetric")
     rollSymmetric = BoolProperty(name="rollSymmetric")
-
     aabb = CollectionProperty(type=TeraColliderAABB)
+
     aabb_index = IntProperty()
     mesh_index = IntProperty(update=on_mesh_change_index)
 
@@ -60,16 +61,15 @@ class TeraBlockProperty(PropertyGroup):
 def register():
     bpy.utils.register_class(TeraMeshShape)
     bpy.utils.register_class(TeraColliderAABB)
-    bpy.utils.register_class(TeraBlockProperty)
+    bpy.utils.register_class(TeraShapeProperty)
 
-    bpy.types.Object.tera_block = PointerProperty(type=TeraBlockProperty)
+    bpy.types.Object.tera_shape = PointerProperty(type=TeraShapeProperty)
     bpy.types.Mesh.tera_mesh = PointerProperty(type=TeraMeshShape)
 
-    bpy.types.Scene.tera_selected_group =  PointerProperty(type=Collection)
-    bpy.types.Collection.tera_block_index = IntProperty()
+    bpy.types.Collection.tera_shape_select_index = IntProperty()
 
 
 def unregister():
     bpy.utils.unregister_class(TeraMeshShape)
     bpy.utils.unregister_class(TeraColliderAABB)
-    bpy.utils.unregister_class(TeraBlockProperty)
+    bpy.utils.unregister_class(TeraShapeProperty)
