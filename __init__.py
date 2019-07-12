@@ -24,7 +24,6 @@ else:
     from . import operator
     from . import properties
     from . import vieport
-import bpy
 
 from bpy.utils import previews
 

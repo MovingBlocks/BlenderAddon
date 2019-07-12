@@ -46,15 +46,16 @@ def on_mesh_change_index(self, context):
 
 
 class TeraShapeProperty(PropertyGroup):
-
     author = StringProperty(default="")
-    symmetric = BoolProperty(name="symmetric")
-    yawSymmetric = BoolProperty(name="yawSymmetric")
-    pitchSymmetric = BoolProperty(name="pitchSymmetric")
-    rollSymmetric = BoolProperty(name="rollSymmetric")
-    aabb = CollectionProperty(type=TeraColliderAABB)
 
+    symmetric = BoolProperty(name="symmetric")
+    yaw_symmetric = BoolProperty(name="yawSymmetric")
+    pitch_symmetric = BoolProperty(name="pitchSymmetric")
+    roll_symmetric = BoolProperty(name="rollSymmetric")
+
+    aabb = CollectionProperty(type=TeraColliderAABB)
     aabb_index = IntProperty()
+
     mesh_index = IntProperty(update=on_mesh_change_index)
 
 
