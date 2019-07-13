@@ -3,13 +3,14 @@ if "bpy" in locals():
     importlib.reload(properties_shapes)
     importlib.reload(space_collider_shapes)
 else:
+    import bpy
     from . import properties_shapes
     from . import space_collider_shapes
 
 
-
 def register():
     bpy.utils.register_class(properties_shapes.TERA_SHAPES_PT_shapes)
+    bpy.utils.register_class(properties_shapes.TERA_SHAPES_UL_shape)
 
     bpy.utils.register_class(space_collider_shapes.Shape_Collider_UL_AABB_list)
     bpy.utils.register_class(space_collider_shapes.Window_PT_AABBBoxCollider)
@@ -19,6 +20,7 @@ def register():
 
 def unregister():
     bpy.utils.unregister_class(properties_shapes.TERA_SHAPES_PT_shapes)
+    bpy.utils.unregister_class(properties_shapes.TERA_SHAPES_UL_shape)
 
     bpy.utils.unregister_class(space_collider_shapes.Shape_Collider_UL_AABB_list)
     bpy.utils.unregister_class(space_collider_shapes.Window_PT_AABBBoxCollider)

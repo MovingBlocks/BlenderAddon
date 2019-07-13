@@ -29,7 +29,8 @@ class TERA_SHAPES_OT_add_aabb_collider(Operator):
     handler = None
 
     def draw_aabb(self, context):
-        obj = util.getSelectedObjectShape()
+        obj = bpy.data.objects[context.scene.tera_shape_select_index]
+
         if (obj and self):
             l = obj.location
             origin = self.origin
@@ -43,13 +44,11 @@ class TERA_SHAPES_OT_add_aabb_collider(Operator):
                 l[2] + origin[2] + extent[2], (0, 0, 1, 1))
 
     def __init__(self):
-
-
+        pass
 
     @classmethod
     def poll(cls, context):
-        selected_object = util.getSelectedObjectShape()
-        return (selected_object is not None)
+        return (context.scene.tera_shape_select_index > 0 and context.scene.tera_shape_select_index < len(bpy.data.objects))
 
     def draw(self, context):
         layout = self.layout
@@ -67,8 +66,8 @@ class TERA_SHAPES_OT_add_aabb_collider(Operator):
             self.report({"WARNING"},
                         "label for aabb required")
             return {'CANCELLED'}
-        selected_object = util.getSelectedObjectShape()
-        aabb = selected_object.tera_block.aabb.add()
+        selected_object = bpy.data.objects[context.scene.tera_shape_select_index]
+        aabb = selected_object.tera_shape.aabb.add()
         aabb.label = self.label
         aabb.origin = self.origin
         aabb.extent = self.extent
@@ -88,8 +87,7 @@ class TERA_SHAPES_OT_remove_aabb_collider(Operator):
 
     @classmethod
     def poll(cls, context):
-        selected_object = util.getSelectedObjectShape()
-        return (selected_object is not None)
+        return (context.scene.tera_shape_select_index > 0 and context.scene.tera_shape_select_index < len(bpy.data.objects))
 
     def draw(self, context):
         layout = self.layout
@@ -97,8 +95,8 @@ class TERA_SHAPES_OT_remove_aabb_collider(Operator):
         col.row().prop(self, "aabb")
 
     def execute(self, context):
-        selected_object = util.getSelectedObjectShape()
-        selected_object.tera_block.aabb.remove(selected_object.tera_block.aabb_index)
+        selected_object = bpy.data.objects[context.scene.tera_shape_select_index]
+        selected_object.tera_shape.aabb.remove(selected_object.tera_shape.aabb_index)
         # aabb.label = self.label
         return {'FINISHED'}
 

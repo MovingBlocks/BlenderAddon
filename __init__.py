@@ -1,9 +1,9 @@
 bl_info = {
-    "name": "Terasology Blocks",
+    "name": "Terasology Shapes",
     "author": "Michael Pollind",
     "blender": (2, 80, 0),
     "location": "Object",
-    "description": "A tool for creating .",
+    "description": "A tool for creating Terasology block shapes.",
     "warning": "",
     "wiki_url": "",
     "category": "Object",
@@ -11,17 +11,16 @@ bl_info = {
 
 import os
 
-
 if "bpy" in locals():
     import importlib
-    importlib.reload(ui)
-    importlib.reload(operator)
+    importlib.reload(shapes_ui)
+    importlib.reload(shapes_operator)
     importlib.reload(properties)
     importlib.reload(vieport)
 else:
     import bpy
-    from . import ui
-    from . import operator
+    from . import shapes_ui
+    from . import shapes_operator
     from . import properties
     from . import vieport
 
@@ -40,15 +39,15 @@ from bpy.props import (
 
 
 def register():
-    ui.register()
-    operator.register()
+    shapes_ui.register()
+    shapes_operator.register()
     properties.register()
     vieport.register()
 
 
 def unregister():
-    ui.unregister()
-    operator.unregister()
+    shapes_ui.unregister()
+    shapes_operator.unregister()
     properties.unregister()
     vieport.unregister()
 

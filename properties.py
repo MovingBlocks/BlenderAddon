@@ -33,7 +33,6 @@ class TeraMeshShape(PropertyGroup):
             ('Center','Center',''),
             ('Top', 'Top', ''),
             ('Bottom', 'Bottom', ''),
-            ('Center', 'Center', ''),
             ('Front', 'Front', ''),
             ('Back', 'Back', ''),
             ('Left', 'Left', ''),
@@ -48,10 +47,10 @@ def on_mesh_change_index(self, context):
 class TeraShapeProperty(PropertyGroup):
     author = StringProperty(default="")
 
-    symmetric = BoolProperty(name="symmetric")
-    yaw_symmetric = BoolProperty(name="yawSymmetric")
-    pitch_symmetric = BoolProperty(name="pitchSymmetric")
-    roll_symmetric = BoolProperty(name="rollSymmetric")
+    symmetric = BoolProperty(name="Symmetric")
+    yaw_symmetric = BoolProperty(name="Yaw Symmetric")
+    pitch_symmetric = BoolProperty(name="Pitch Symmetric")
+    roll_symmetric = BoolProperty(name="Roll Symmetric")
 
     aabb = CollectionProperty(type=TeraColliderAABB)
     aabb_index = IntProperty()
@@ -67,7 +66,7 @@ def register():
     bpy.types.Object.tera_shape = PointerProperty(type=TeraShapeProperty)
     bpy.types.Mesh.tera_mesh = PointerProperty(type=TeraMeshShape)
 
-    bpy.types.Collection.tera_shape_select_index = IntProperty()
+    bpy.types.Scene.tera_shape_select_index = IntProperty()
 
 
 def unregister():
