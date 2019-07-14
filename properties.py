@@ -30,27 +30,31 @@ class TeraMeshShape(PropertyGroup):
         name='shape side',
         description='determines the side that is occluded',
         items=[
-            ('Center','Center',''),
-            ('Top', 'Top', ''),
-            ('Bottom', 'Bottom', ''),
-            ('Front', 'Front', ''),
-            ('Back', 'Back', ''),
-            ('Left', 'Left', ''),
-            ('Right', 'Right', ''),
+            ('center','Center',''),
+            ('top', 'Top', ''),
+            ('bottom', 'Bottom', ''),
+            ('front', 'Front', ''),
+            ('back', 'Back', ''),
+            ('left', 'Left', ''),
+            ('right', 'Right', ''),
         ]
     )
+    full_side = BoolProperty(default=True, name="Full Side")
 
 def on_mesh_change_index(self, context):
     bpy.context.view_layer.objects.active = bpy.data.objects[self.mesh_index]
 
 
 class TeraShapeProperty(PropertyGroup):
-    author = StringProperty(default="")
+    author = StringProperty(default="", name = "Author")
+    display_name = StringProperty(default="",name="Display Name")
 
     symmetric = BoolProperty(name="Symmetric")
     yaw_symmetric = BoolProperty(name="Yaw Symmetric")
     pitch_symmetric = BoolProperty(name="Pitch Symmetric")
     roll_symmetric = BoolProperty(name="Roll Symmetric")
+
+    convex_hull = BoolProperty(name="Convex Hull")
 
     aabb = CollectionProperty(type=TeraColliderAABB)
     aabb_index = IntProperty()

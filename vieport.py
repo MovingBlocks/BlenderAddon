@@ -30,8 +30,8 @@ def draw():
                         loc[0] + origin[0] + extent[0],
                         loc[1] + origin[1] - extent[1],
                         loc[1] + origin[1] + extent[1],
-                        loc[2] + origin[2] - extent[2],
-                        loc[2] + origin[2] + extent[2])
+                        loc[2] + origin[2] - extent[2] + .5,
+                        loc[2] + origin[2] + extent[2]  + .5)
                     draw_util.draw_wire_frame(indices,coords,(0, 0, 1, .8))
 
                 if (0 <= shape.mesh_index < len(bpy.data.meshes)):

@@ -74,7 +74,9 @@ class Window_PT_BlockUtilities(Panel):
 
     def draw(self, context):
         selected_object = bpy.data.objects[context.scene.tera_shape_select_index]
+        self.layout.row().prop(selected_object.tera_shape, 'convex_hull')
         self.layout.row().template_list("Shape_UL_Mesh_list", "", bpy.data, "meshes", selected_object.tera_shape,"mesh_index")
         if(0 <= selected_object.tera_shape.mesh_index < len(bpy.data.meshes)):
             target_mesh = bpy.data.meshes[selected_object.tera_shape.mesh_index]
             self.layout.row().prop(target_mesh.tera_mesh, 'part')
+            self.layout.row().prop(target_mesh.tera_mesh, 'full_side')

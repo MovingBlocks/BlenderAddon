@@ -1,3 +1,10 @@
+if "bpy" in locals():
+    import importlib
+    importlib.reload(draw_util)
+else:
+    import bpy
+    from .. import draw_util
+
 from bpy.types import Operator
 from bpy.props import (
         BoolProperty,
@@ -7,8 +14,25 @@ from bpy.props import (
         StringProperty,
         FloatVectorProperty
         )
-import bpy
 
+
+
+
+def draw_aabb(self, context):
+    obj = bpy.data.objects[context.scene.tera_shape_select_index]
+
+    if (obj and self):
+        l = obj.location
+        origin = self.origin
+        extent = self.extent
+        indices, coords = draw_util.get_line_cube(
+            l[0] + origin[0] - extent[0],
+            l[0] + origin[0] + extent[0],
+            l[1] + origin[1] - extent[1],
+            l[1] + origin[1] + extent[1],
+            l[2] + origin[2] - extent[2],
+            l[2] + origin[2] + extent[2])
+        draw_util.draw_wire_frame(indices, coords, (0, 0, 1, 1))
 
 
 class TERA_SHAPES_OT_add_aabb_collider(Operator):
@@ -27,21 +51,6 @@ class TERA_SHAPES_OT_add_aabb_collider(Operator):
                                  description="extent of collider",
                                  )
     handler = None
-
-    def draw_aabb(self, context):
-        obj = bpy.data.objects[context.scene.tera_shape_select_index]
-
-        if (obj and self):
-            l = obj.location
-            origin = self.origin
-            extent = self.extent
-            draw_util.draw_wire_cube(
-                l[0] + origin[0] - extent[0],
-                l[0] + origin[0] + extent[0],
-                l[1] + origin[1] - extent[1],
-                l[1] + origin[1] + extent[1],
-                l[2] + origin[2] - extent[2],
-                l[2] + origin[2] + extent[2], (0, 0, 1, 1))
 
     def __init__(self):
         pass
@@ -75,7 +84,7 @@ class TERA_SHAPES_OT_add_aabb_collider(Operator):
 
 
     def invoke(self, context, event):
-        self.handler = bpy.types.SpaceView3D.draw_handler_add(self.draw_aabb, (self, context), 'WINDOW', 'POST_VIEW')
+        self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_aabb, (self, context), 'WINDOW', 'POST_VIEW')
         return context.window_manager.invoke_props_dialog(self, width = 400)
 
 

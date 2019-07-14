@@ -22,7 +22,7 @@ class TERA_SHAPES_UL_shape(UIList):
 
         for idx, ob in enumerate(obs):
             flt_neworder.append(idx)
-            if(ob.parent == None and ob.type in ['EMPTY']):
+            if(ob.parent == None and ob.type in ['EMPTY'] and ob.name.startswith('shape_')):
                 flt_flags.append(self.bitflag_filter_item)
             else:
                 flt_flags.append(~self.bitflag_filter_item)
@@ -48,6 +48,7 @@ class TERA_SHAPES_PT_shapes(Panel):
             selected_object = bpy.data.objects[context.scene.tera_shape_select_index]
             if(selected_object):
                 self.layout.row().prop(selected_object.tera_shape,"author")
+                self.layout.row().prop(selected_object.tera_shape, "display_name")
                 self.layout.row().prop(selected_object.tera_shape, "symmetric")
                 self.layout.row().prop(selected_object.tera_shape, "yaw_symmetric")
                 self.layout.row().prop(selected_object.tera_shape, "pitch_symmetric")

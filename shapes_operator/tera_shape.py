@@ -35,6 +35,7 @@ class TERA_SHAPES_OT_add_shape(Operator):
             return {'CANCELLED'}
         o = bpy.data.objects.new('shape_' + self.name, None)
         o.empty_display_type = 'PLAIN_AXES'
+        o.tera_shape.display_name = self.name
         bpy.context.collection.objects.link(o)
         return  {'FINISHED'}
 
