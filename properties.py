@@ -1,16 +1,16 @@
 import bpy
 
-from bpy.types import (PropertyGroup,Collection,Object)
+from bpy.types import (PropertyGroup, Collection, Object)
 from bpy.props import (
-        BoolProperty,
-        EnumProperty,
-        FloatProperty,
-        IntProperty,
-        StringProperty,
-        CollectionProperty,
-        PointerProperty,
-        FloatVectorProperty
-        )
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+    StringProperty,
+    CollectionProperty,
+    PointerProperty,
+    FloatVectorProperty
+)
 
 
 class TeraColliderAABB(PropertyGroup):
@@ -24,13 +24,12 @@ class TeraColliderAABB(PropertyGroup):
                                  size=3)
 
 
-
 class TeraMeshShape(PropertyGroup):
     part = EnumProperty(
         name='shape side',
         description='determines the side that is occluded',
         items=[
-            ('center','Center',''),
+            ('center', 'Center', ''),
             ('top', 'Top', ''),
             ('bottom', 'Bottom', ''),
             ('front', 'Front', ''),
@@ -41,13 +40,14 @@ class TeraMeshShape(PropertyGroup):
     )
     full_side = BoolProperty(default=True, name="Full Side")
 
+
 def on_mesh_change_index(self, context):
     bpy.context.view_layer.objects.active = bpy.data.objects[self.mesh_index]
 
 
 class TeraShapeProperty(PropertyGroup):
-    author = StringProperty(default="", name = "Author")
-    display_name = StringProperty(default="",name="Display Name")
+    author = StringProperty(default="", name="Author")
+    display_name = StringProperty(default="", name="Display Name")
 
     symmetric = BoolProperty(name="Symmetric")
     yaw_symmetric = BoolProperty(name="Yaw Symmetric")

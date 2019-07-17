@@ -1,16 +1,17 @@
-from bpy.types import (Panel,UIList,BlendDataCollections)
+from bpy.types import (Panel, UIList, BlendDataCollections)
 from bpy.props import (
-        BoolProperty,
-        EnumProperty,
-        FloatProperty,
-        IntProperty,
-        StringProperty,
-        CollectionProperty
-        )
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+    StringProperty,
+    CollectionProperty
+)
 import bpy
 
+
 class TERA_SHAPES_UL_shape(UIList):
-    def draw_item(self, context, layout, data, item, icon, active_data, active_propname,index, flt_flag):
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index, flt_flag):
         layout.prop(item, "name", text="", emboss=False, icon_value=icon)
 
     def filter_items(self, context, data, propname):
@@ -38,7 +39,8 @@ class TERA_SHAPES_PT_shapes(Panel):
 
     def draw(self, context):
         row = self.layout.row()
-        row.template_list("TERA_SHAPES_UL_shape","",bpy.data,"objects",context.scene,"tera_shape_select_index")
+        row.template_list("TERA_SHAPES_UL_shape", "", bpy.data,
+                          "objects", context.scene, "tera_shape_select_index")
 
         col = row.column()
         col.operator("tera.add_shape", icon='ADD', text="")
@@ -47,10 +49,9 @@ class TERA_SHAPES_PT_shapes(Panel):
         if(context.scene.tera_shape_select_index > 0 and context.scene.tera_shape_select_index < len(bpy.data.objects)):
             selected_object = bpy.data.objects[context.scene.tera_shape_select_index]
             if(selected_object):
-                self.layout.row().prop(selected_object.tera_shape,"author")
+                self.layout.row().prop(selected_object.tera_shape, "author")
                 self.layout.row().prop(selected_object.tera_shape, "display_name")
                 self.layout.row().prop(selected_object.tera_shape, "symmetric")
                 self.layout.row().prop(selected_object.tera_shape, "yaw_symmetric")
                 self.layout.row().prop(selected_object.tera_shape, "pitch_symmetric")
                 self.layout.row().prop(selected_object.tera_shape, "roll_symmetric")
-

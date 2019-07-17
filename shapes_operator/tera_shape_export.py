@@ -1,13 +1,13 @@
 import json
 import re
 from _ctypes import PyObj_FromPtr
-import bpy, bmesh
+import bpy
+import bmesh
 from bpy.props import BoolProperty, StringProperty
 import bpy_extras.io_utils
 import json
 import datetime
 import mathutils
-
 
 
 class NoIndent(object):
@@ -41,7 +41,8 @@ class Encoder(json.JSONEncoder):
             # see https://stackoverflow.com/a/15012814/355230
             id = int(match.group(1))
             no_indent = PyObj_FromPtr(id)
-            json_obj_repr = json.dumps(no_indent.value, sort_keys=self.__sort_keys)
+            json_obj_repr = json.dumps(
+                no_indent.value, sort_keys=self.__sort_keys)
 
             # Replace the matched id string with json formatted representation
             # of the corresponding Python object.
@@ -49,6 +50,7 @@ class Encoder(json.JSONEncoder):
                 '"{}"'.format(format_spec.format(id)), json_obj_repr)
 
         return json_repr
+
 
 class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
     bl_idname = "tera.export_shape"
@@ -61,7 +63,6 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
         name="Apply Modifiers",
         description="Apply Modifiers to the exported mesh",
         default=True)
-
 
     @classmethod
     def poll(cls, context):
@@ -78,12 +79,15 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
         result['faces'] = []
 
         for vert in mesh.vertices:
-            result['vertices'].append(NoIndent([-vert.co.x, vert.co.y, vert.co.z]))
-            result['normals'].append(NoIndent([-vert.normal.x, vert.normal.y, vert.normal.z]))
+            result['vertices'].append(
+                NoIndent([-vert.co.x, vert.co.y, vert.co.z]))
+            result['normals'].append(
+                NoIndent([-vert.normal.x, vert.normal.y, vert.normal.z]))
 
         uv_active = mesh.uv_layers.active
         for layer in uv_active.data:
-            result['texcoords'].append(NoIndent([layer.uv[0],1.0 - layer.uv[1]]))
+            result['texcoords'].append(
+                NoIndent([layer.uv[0], 1.0 - layer.uv[1]]))
         mesh.calc_loop_triangles()
         for tri in mesh.loop_triangles:
             result['faces'].append(NoIndent([i for i in tri.loops]))
@@ -91,7 +95,6 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
         bpy.data.meshes.remove(mesh)
 
         return result
-
 
     def execute(self, context):
         path = bpy.path.ensure_ext(self.filepath, self.filename_ext)
@@ -115,20 +118,21 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
                         meshes[child.data.tera_mesh.part] = bmesh.new()
                         is_full_side[child.data.tera_mesh.part] = False
 
-                    is_full_side[child.data.tera_mesh.part] = (True if is_full_side[child.data.tera_mesh.part] else child.data.tera_mesh.full_side)
+                    is_full_side[child.data.tera_mesh.part] = (
+                        True if is_full_side[child.data.tera_mesh.part] else child.data.tera_mesh.full_side)
 
                     mesh = bpy.data.meshes.new('temp')
 
                     temp = bmesh.new()
                     temp.from_mesh(child.data)
-                    bmesh.ops.transform(temp,matrix=selected_object.matrix_world.inverted() @ child.matrix_world,verts=temp.verts)
+                    bmesh.ops.transform(temp, matrix=selected_object.matrix_world.inverted() @ child.matrix_world, verts=temp.verts)
                     temp.to_mesh(mesh)
 
                     meshes[child.data.tera_mesh.part].from_mesh(mesh)
                     bpy.data.meshes.remove(mesh)
                     temp.free()
 
-            for key,value in meshes.items():
+            for key, value in meshes.items():
                 # bmesh.ops.transform(value, matrix=matrix_world.inverted(), verts=value.verts)
                 result[key] = self.meshify(value)
                 result[key]['fullSide'] = is_full_side[key]
@@ -143,8 +147,8 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
 
                 for aabb in shape.aabb:
                     result['collision']['colliders'].append({
-                        'type' : 'AABB',
-                        'position' : NoIndent([aabb.origin[0],aabb.origin[1],aabb.origin[2]]),
+                        'type': 'AABB',
+                        'position': NoIndent([aabb.origin[0], aabb.origin[1], aabb.origin[2]]),
                         'extents': NoIndent([aabb.extent[0], aabb.extent[1], aabb.extent[2]])
                     })
 
@@ -157,7 +161,8 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
 
             file = open(path, "w", encoding="utf8")
             print("saving complete: %r " % path)
-            file.write(json.dumps(result,indent=2, separators=(',', ': '),cls=Encoder))
+            file.write(json.dumps(result, indent=2,
+                                  separators=(',', ': '), cls=Encoder))
             file.close()
         # filepath = self.filepath
 
@@ -171,4 +176,5 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
         layout.row().prop(self, "apply_modifiers")
 
         row = self.layout.row()
-        row.template_list("TERA_SHAPES_UL_shape", "", bpy.data, "objects", context.scene, "tera_shape_select_index")
+        row.template_list("TERA_SHAPES_UL_shape", "", bpy.data,
+                          "objects", context.scene, "tera_shape_select_index")

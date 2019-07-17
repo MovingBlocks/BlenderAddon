@@ -9,6 +9,16 @@ bl_info = {
     "category": "Object",
 }
 
+from bpy.props import (
+    EnumProperty, PointerProperty,
+    StringProperty, BoolProperty,
+    IntProperty, FloatProperty, FloatVectorProperty
+)
+from bpy.types import (
+    Panel, WindowManager, PropertyGroup,
+    AddonPreferences, Menu
+)
+from bpy.utils import previews
 import os
 
 if "bpy" in locals():
@@ -24,19 +34,6 @@ else:
     from . import properties
     from . import vieport
 
-from bpy.utils import previews
-
-from bpy.types import (
-    Panel, WindowManager, PropertyGroup,
-    AddonPreferences, Menu
-    )
-
-from bpy.props import (
-    EnumProperty, PointerProperty,
-    StringProperty, BoolProperty,
-    IntProperty, FloatProperty, FloatVectorProperty
-    )
-
 
 def register():
     shapes_ui.register()
@@ -51,6 +48,6 @@ def unregister():
     properties.unregister()
     vieport.unregister()
 
+
 if __name__ == '__main__':
     register()
-
