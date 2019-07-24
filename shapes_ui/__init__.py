@@ -22,7 +22,8 @@ def unregister():
     bpy.utils.unregister_class(properties_shapes.TERA_SHAPES_PT_shapes)
     bpy.utils.unregister_class(properties_shapes.TERA_SHAPES_UL_shape)
 
-    bpy.utils.unregister_class(space_collider_shapes.Shape_Collider_UL_AABB_list)
+    bpy.utils.unregister_class(
+        space_collider_shapes.Shape_Collider_UL_AABB_list)
     bpy.utils.unregister_class(space_collider_shapes.Window_PT_AABBBoxCollider)
     bpy.utils.unregister_class(space_collider_shapes.Shape_UL_Mesh_list)
     bpy.utils.unregister_class(space_collider_shapes.Window_PT_BlockUtilities)
