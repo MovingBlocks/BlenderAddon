@@ -14,7 +14,7 @@ class TERA_SHAPES_OT_add_shape(Operator):
     bl_label = "Add Shape"
     bl_description = "Adds a new Shape"
 
-    name = StringProperty(
+    name: StringProperty(
         name="name",
         default="")
 
