@@ -57,9 +57,9 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
     bl_label = "Export Terasology Block Shape"
 
     filename_ext = ".shape"
-    filter_glob = StringProperty(default="*.shape", options={'HIDDEN'})
+    filter_glob: StringProperty(default="*.shape", options={'HIDDEN'})
 
-    apply_modifiers = BoolProperty(
+    apply_modifiers: BoolProperty(
         name="Apply Modifiers",
         description="Apply Modifiers to the exported mesh",
         default=True)

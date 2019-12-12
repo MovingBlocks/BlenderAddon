@@ -25,16 +25,12 @@ def draw():
                 for aabb in shape.aabb:
                     origin = aabb.origin
                     extent = aabb.extent
-                    indices, coords = draw_util.get_line_cube(loc[0] + origin[0] - extent[0],
-                                                              loc[0] + origin[0] +
-                                                              extent[0],
-                                                              loc[1] + origin[1] -
-                                                              extent[1],
-                                                              loc[1] + origin[1] +
-                                                              extent[1],
-                                                              loc[2] + origin[2] -
-                                                              extent[2] + .5,
-                                                              loc[2] + origin[2] + extent[2] + .5)
+                    indices, coords = draw_util.get_line_cube(loc[0] + origin[0] - extent[0] * 0.5,
+                                                              loc[0] + origin[0] + extent[0] * 0.5,
+                                                              loc[1] + origin[1] - extent[1] * 0.5,
+                                                              loc[1] + origin[1] + extent[1] * 0.5,
+                                                              loc[2] + origin[2] - extent[2] * 0.5,
+                                                              loc[2] + origin[2] + extent[2] * 0.5)
                     draw_util.draw_wire_frame(indices, coords, (0, 0, 1, .8))
 
                 if (0 <= shape.mesh_index < len(bpy.data.meshes)):
@@ -74,14 +70,16 @@ def draw():
                                                           loc[0] + .5,
                                                           loc[1] - .5,
                                                           loc[1] + .5,
-                                                          loc[2], loc[2] + 1)
+                                                          loc[2] - .5,
+                                                          loc[2] + .5)
                 draw_util.draw_wire_frame(indices, coords, (0, 1, 0, .4))
             else:
                 indices, coords = draw_util.get_line_cube(loc[0] - .5,
                                                           loc[0] + .5,
                                                           loc[1] - .5,
                                                           loc[1] + .5,
-                                                          loc[2], loc[2] + 1)
+                                                          loc[2] - .5,
+                                                          loc[2] + .5)
                 draw_util.draw_wire_frame(indices, coords, (0, 0, 0, .4))
 
     bgl.glDisable(bgl.GL_DEPTH_TEST)

@@ -14,18 +14,18 @@ from bpy.props import (
 
 
 class TeraColliderAABB(PropertyGroup):
-    label = StringProperty(name="label",
+    label: StringProperty(name="label",
                            description="label that describes aabb collider")
-    origin = FloatVectorProperty(name="origin",
+    origin: FloatVectorProperty(name="origin",
                                  description="origin of the collider shape",
                                  size=3)
-    extent = FloatVectorProperty(name="extent",
+    extent: FloatVectorProperty(name="extent",
                                  description="extent of the collider shape",
                                  size=3)
 
 
 class TeraMeshShape(PropertyGroup):
-    part = EnumProperty(
+    part: EnumProperty(
         name='shape side',
         description='determines the side that is occluded',
         items=[
@@ -38,7 +38,7 @@ class TeraMeshShape(PropertyGroup):
             ('right', 'Right', ''),
         ]
     )
-    full_side = BoolProperty(default=True, name="Full Side")
+    full_side: BoolProperty(default=True, name="Full Side")
 
 
 def on_mesh_change_index(self, context):
@@ -46,20 +46,20 @@ def on_mesh_change_index(self, context):
 
 
 class TeraShapeProperty(PropertyGroup):
-    author = StringProperty(default="", name="Author")
-    display_name = StringProperty(default="", name="Display Name")
+    author: StringProperty(default="", name="Author")
+    display_name: StringProperty(default="", name="Display Name")
 
-    symmetric = BoolProperty(name="Symmetric")
-    yaw_symmetric = BoolProperty(name="Yaw Symmetric")
-    pitch_symmetric = BoolProperty(name="Pitch Symmetric")
-    roll_symmetric = BoolProperty(name="Roll Symmetric")
+    symmetric: BoolProperty(name="Symmetric")
+    yaw_symmetric: BoolProperty(name="Yaw Symmetric")
+    pitch_symmetric: BoolProperty(name="Pitch Symmetric")
+    roll_symmetric: BoolProperty(name="Roll Symmetric")
 
-    convex_hull = BoolProperty(name="Convex Hull")
+    convex_hull: BoolProperty(name="Convex Hull")
 
-    aabb = CollectionProperty(type=TeraColliderAABB)
-    aabb_index = IntProperty()
+    aabb: CollectionProperty(type=TeraColliderAABB)
+    aabb_index: IntProperty()
 
-    mesh_index = IntProperty(update=on_mesh_change_index)
+    mesh_index: IntProperty(update=on_mesh_change_index)
 
 
 def register():

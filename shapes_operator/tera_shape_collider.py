@@ -41,13 +41,13 @@ class TERA_SHAPES_OT_add_aabb_collider(Operator):
     bl_description = "Adds AABB to Shape"
     bl_options = {'REGISTER', 'UNDO'}
 
-    label = StringProperty(name="label",
+    label: StringProperty(name="label",
                            description="label that describes aabb collider")
-    origin = FloatVectorProperty(name="origin",
+    origin: FloatVectorProperty(name="origin",
                                  description="origin of collider",
                                  )
 
-    extent = FloatVectorProperty(name="extent",
+    extent: FloatVectorProperty(name="extent",
                                  description="extent of collider",
                                  )
     handler = None
