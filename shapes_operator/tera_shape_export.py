@@ -66,7 +66,7 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
 
     @classmethod
     def poll(cls, context):
-        return context.active_object != None
+        return 0 < context.scene.tera_shape_select_index < len(bpy.data.objects)
 
     def meshify(self, bm):
         mesh = bpy.data.meshes.new('temp')
@@ -80,9 +80,9 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
 
         for vert in mesh.vertices:
             result['vertices'].append(
-                NoIndent([-vert.co.x, vert.co.y, vert.co.z]))
+                NoIndent([-vert.co.x, vert.co.z, vert.co.y]))
             result['normals'].append(
-                NoIndent([-vert.normal.x, vert.normal.y, vert.normal.z]))
+                NoIndent([-vert.normal.x, vert.normal.z, vert.normal.y]))
 
         uv_active = mesh.uv_layers.active
         for layer in uv_active.data:
@@ -99,7 +99,7 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
     def execute(self, context):
         path = bpy.path.ensure_ext(self.filepath, self.filename_ext)
 
-        if (context.scene.tera_shape_select_index > 0 and context.scene.tera_shape_select_index < len(bpy.data.objects)):
+        if (0 < context.scene.tera_shape_select_index < len(bpy.data.objects)):
             selected_object = bpy.data.objects[context.scene.tera_shape_select_index]
             shape = selected_object.tera_shape
 
@@ -148,8 +148,8 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
                 for aabb in shape.aabb:
                     result['collision']['colliders'].append({
                         'type': 'AABB',
-                        'position': NoIndent([aabb.origin[0], aabb.origin[1], aabb.origin[2]]),
-                        'extents': NoIndent([aabb.extent[0], aabb.extent[1], aabb.extent[2]])
+                        'position': NoIndent([aabb.origin[0], aabb.origin[2], aabb.origin[1]]),
+                        'extents': NoIndent([aabb.extent[0], aabb.extent[2], aabb.extent[1]])
                     })
 
             if (hasColliders == True):

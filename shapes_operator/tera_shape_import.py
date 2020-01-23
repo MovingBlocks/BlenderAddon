@@ -97,7 +97,7 @@ class TERA_SHAPE_OT_shape_importer(bpy.types.Operator, bpy_extras.io_utils.Impor
                             p = collider['position']
                             r = collider['radius']
                             bpy.ops.mesh.primitive_uv_sphere_add(
-                                segments=16, location=(-p[0], p[1], p[2]), size=r)
+                                segments=16, location=(-p[0], p[2], p[1]), size=r)
                             bpy.ops.object.transform_apply(
                                 location=True, scale=True, rotation=True)
 
