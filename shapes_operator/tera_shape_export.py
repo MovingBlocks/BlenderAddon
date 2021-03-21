@@ -85,12 +85,13 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
                 NoIndent([-vert.normal.x, vert.normal.z, vert.normal.y]))
 
         uv_active = mesh.uv_layers.active
-        for layer in uv_active.data:
-            result['texcoords'].append(
-                NoIndent([layer.uv[0], 1.0 - layer.uv[1]]))
+        result['texcoords'] = [NoIndent([0,0])for _ in range(0, len(mesh.loops))]
+        for i, layer in enumerate(uv_active.data):
+            result['texcoords'][mesh.loops[i].vertex_index] = NoIndent([layer.uv[0], 1.0 - layer.uv[1]])
+
         mesh.calc_loop_triangles()
         for tri in mesh.loop_triangles:
-            result['faces'].append(NoIndent([i for i in tri.loops]))
+            result['faces'].append(NoIndent([mesh.loops[i].vertex_index for i in tri.loops]))
 
         bpy.data.meshes.remove(mesh)
 
