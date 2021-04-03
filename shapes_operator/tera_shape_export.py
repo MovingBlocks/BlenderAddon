@@ -85,7 +85,7 @@ class TERA_SHAPE_OT_shape_exporter(bpy.types.Operator, bpy_extras.io_utils.Expor
                 NoIndent([-vert.normal.x, vert.normal.z, vert.normal.y]))
 
         uv_active = mesh.uv_layers.active
-        result['texcoords'] = [NoIndent([0,0])for _ in range(0, len(mesh.loops))]
+        result['texcoords'] = [NoIndent([0,0]) for _ in range(0, len(mesh.loops))]
         for i, layer in enumerate(uv_active.data):
             result['texcoords'][mesh.loops[i].vertex_index] = NoIndent([layer.uv[0], 1.0 - layer.uv[1]])
 
